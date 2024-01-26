@@ -28,28 +28,48 @@ private:
 	{
 		float R = -1;
 		int lag_max = max(v1.size(), max(v2.size(), v3.size()));
-
+		
 		for (int lag = 0; lag < lag_max; lag++) {
 			if (corr(v1, v2, lag) > R)
 			{
 				R = corr(v1, v2, lag);
 				d1 = lag;
 			}
+			if (corr(v2, v1, lag) > R)
+			{
+				R = corr(v2, v1, lag);
+				d1 = -lag;
+			}
 		}
+
 		R = -1;
+
 		for (int lag = 0; lag < lag_max; lag++) {
+			
 			if (corr(v1, v3, lag) > R)
 			{
 				R = corr(v1, v3, lag);
 				d2 = lag;
 			}
+			if (corr(v3, v1, lag) > R)
+			{
+				R = corr(v3, v1, lag);
+				d2 = -lag;
+			}
 		}
+
 		R = -1;
+		
 		for (int lag = 0; lag < lag_max; lag++) {
 			if (corr(v2, v3, lag) > R)
 			{
 				R = corr(v2, v3, lag);
 				d3 = lag;
+			}
+			if (corr(v3, v2, lag) > R)
+			{
+				R = corr(v3, v2, lag);
+				d3 = -lag;
 			}
 		}
 

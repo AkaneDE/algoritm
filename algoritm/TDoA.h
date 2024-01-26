@@ -39,7 +39,7 @@ public:
     MatrixXd DoTDoA()
     {
         MatrixXd xyz(3, 1);
-        xyz << 50, 50, 50;
+        xyz << 50, 50, 100;
         for (int i = 0; i < xyz.rows(); ++i) {
             for (int j = 0; j < xyz.cols(); ++j) {
                 std::cout << "Element at (" << i << "," << j << "): " << xyz(i, j) << std::endl;
@@ -86,7 +86,6 @@ public:
              }
             if (abs(Del(0, 0)) <= 0.001 && abs(Del(1, 0)) <= 0.001 && abs(Del(2, 0)) <= 0.001)
                 break;
-            std::cout << "!!!" << std::endl;
 
         } while (true);
 
