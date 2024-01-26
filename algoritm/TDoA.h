@@ -29,8 +29,9 @@ public:
         this->z3 = z3;
 
         this->t1_2 = t1;
-        this->t2_3 = t2;
-        this->t3_1 = t3;
+        this->t3_1 = t2;
+        this->t2_3 = t3;
+
 
 
 
@@ -39,7 +40,7 @@ public:
     MatrixXd DoTDoA()
     {
         MatrixXd xyz(3, 1);
-        xyz << 50, 50, 100;
+        xyz << 1000, 1000, 1000;
         for (int i = 0; i < xyz.rows(); ++i) {
             for (int j = 0; j < xyz.cols(); ++j) {
                 std::cout << "Element at (" << i << "," << j << "): " << xyz(i, j) << std::endl;
