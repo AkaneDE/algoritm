@@ -3,6 +3,7 @@
 #include "utils.h"
 #include "filters.h"
 #include "TDoA.h"
+#include "G_Z.h"
 using namespace std;
 using namespace filter;
 
@@ -21,12 +22,13 @@ private:
 	double x1; double y1; double z1;
 	double x2; double y2; double z2;
 	double x3; double y3; double z3;
+	const double c = 3120.77;
 
 
 
 	
 	size_t n = 3;//порядок фильтрации
-	const float del_t = 1 / 40000;//40000 отсчётов в секунду. Частота 40кгц
+	const float del_t = 1 / 20000;//40000 отсчётов в секунду. Частота 40кгц
 	
 	void get_Del()//нахождение разницы отсчётов
 	{
@@ -110,10 +112,12 @@ public:
 		v2 = use_filter(v2);
 		v3 = use_filter(v3);//вроде наоборот нужно
 		//создание объекта алгоритма TDoA
-		TDoA_Chan t = TDoA_Chan(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
-		t.DoTDoA();//Вызов метода
+		//G_Z t = G_Z(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
+		G_Z::All(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
+		//TDoA_Chan t = TDoA_Chan(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
+		//t.DoTDoA();//Вызов метода
 	}
 
-
+	
 };
 

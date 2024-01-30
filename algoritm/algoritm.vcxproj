@@ -130,12 +130,14 @@
     <ClCompile Include="algoritm.cpp" />
     <ClCompile Include="all.cpp" />
     <ClCompile Include="filters.cpp" />
+    <ClCompile Include="G_Z.cpp" />
     <ClCompile Include="TDoA.cpp" />
     <ClCompile Include="utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="all.h" />
     <ClInclude Include="filters.h" />
+    <ClInclude Include="G_Z.h" />
     <ClInclude Include="TDoA.h" />
     <ClInclude Include="utils.h" />
   </ItemGroup>
