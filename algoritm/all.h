@@ -93,7 +93,7 @@ private:
 	}
 public:
 
-	all(vector<float> v1, vector<float> v2, vector<float> v3, double x1, double x2, double x3, double y1, double y2, double y3, double z1, double z2, double z3)
+	all(vector<float> v1, vector<float> v2, vector<float> v3, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3)
 	{
 		this->v1 = v1;
 		this->v2 = v2;
@@ -114,6 +114,7 @@ public:
 		//создание объекта алгоритма TDoA
 		//G_Z t = G_Z(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
 		G_Z::All(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
+
 		//TDoA_Chan t = TDoA_Chan(d1 * del_t, d2 * del_t, d3 * del_t, x1, x2, x3, y1, y2, y3, z1, z2, z3);
 		//t.DoTDoA();//Вызов метода
 	}
