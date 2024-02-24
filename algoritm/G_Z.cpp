@@ -14,7 +14,7 @@ namespace G_Z
 	int k;//íîìåð èòåðàöèè âíóòðè öèêëà
 	int j;//íîìåð öèêëà âû÷èñëåíèé
 	int n;//ìàêñèìàëüíîå ÷èñëî èòåðàöèé
-	const double ac = 0.001;
+	const double ac = 0.1;
 	double d12;
 	double d13;
 	double d32;
@@ -42,7 +42,7 @@ namespace G_Z
 		point[2] = 100000;
 		point_i = point;
 
-		n = 1000;
+		n = 10;
 		j = 0;
 		step1();		
 	}
@@ -53,20 +53,23 @@ namespace G_Z
 		k = 0;
 		step2();
 	}
+	double LA = 10000000;
 
 	void step2()
 	{
 		if (k < n)
 		{
-			if (j < point.size()-1)
+			step3();
+
+		}
+		else
+		{
+			if (j < point.size() - 1)
 			{
 				j++;
 			}
 			else j = 0;
-			step3();
-		}
-		else
-		{
+			LA = 1000000;
 			step1();
 		}
 	}
@@ -93,6 +96,8 @@ namespace G_Z
 			{
 				cout << point[0] << " " << point[1] << " " << point[2] << endl;
 				cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
+				cout << LA << endl;
+
 				step5();
 			}
 	}
@@ -100,7 +105,9 @@ namespace G_Z
 	{
 		
 		ras();
+		k++;
 		step2();
+
 		
 	}
 
@@ -189,7 +196,6 @@ namespace G_Z
 			sqrt(pow(p[0] - points[1][0], 2) + pow(p[1] - points[1][1], 2) + pow(p[2] - points[1][2], 2)) +
 			sqrt(pow(p[0] - points[2][0], 2) + pow(p[1] - points[2][1], 2) + pow(p[2] - points[2][2], 2)) - d12 - d32 - d13);
 	}
-	double LA = 1000000000;
 	void useLA()
 	{
 		point_i = point;
@@ -212,7 +218,7 @@ namespace G_Z
 
 			}
 			else {
-				LA = LA / 100;
+				LA = LA / 10;
 				useLA();
 				if (getH(point) > getH(point_i))
 				{
