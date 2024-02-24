@@ -14,7 +14,7 @@ namespace G_Z
 	int k;//íîìåð èòåðàöèè âíóòðè öèêëà
 	int j;//íîìåð öèêëà âû÷èñëåíèé
 	int n;//ìàêñèìàëüíîå ÷èñëî èòåðàöèé
-	const double ac = 0.0001;
+	const double ac = 0.001;
 	double d12;
 	double d13;
 	double d32;
@@ -79,18 +79,22 @@ namespace G_Z
 
 	void step4()
 	{
-		if (sqrt((pow(grad[0], 2) + pow(grad[1], 2) + pow(grad[2], 2))) < ac)
-		{
-			cout << "Ну типа";
-			cout << point[0] << " " << point[1] << " " << point[2] << endl;
-			cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
-		}
-		else
-		{
-			cout << point[0] << " " << point[1] << " " << point[2] << endl;
-			cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
-			step5();
-		}
+		    if (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))+
+			sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))+
+			sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
+			- d12 - d13-d32 < ac)
+			//if (sqrt((pow(grad[0], 2) + pow(grad[1], 2) + pow(grad[2], 2))) < ac)
+			{
+				cout << "Ну типа";
+				cout << point[0] << " " << point[1] << " " << point[2] << endl;
+				cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
+			}
+			else
+			{
+				cout << point[0] << " " << point[1] << " " << point[2] << endl;
+				cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
+				step5();
+			}
 	}
 	void step5()
 	{
@@ -185,7 +189,7 @@ namespace G_Z
 			sqrt(pow(p[0] - points[1][0], 2) + pow(p[1] - points[1][1], 2) + pow(p[2] - points[1][2], 2)) +
 			sqrt(pow(p[0] - points[2][0], 2) + pow(p[1] - points[2][1], 2) + pow(p[2] - points[2][2], 2)) - d12 - d32 - d13);
 	}
-	double LA = 1000000;
+	double LA = 1000000000;
 	void useLA()
 	{
 		point_i = point;
@@ -200,21 +204,30 @@ namespace G_Z
 		}
 		else
 		{
-			LA = LA / 2;
+			LA = LA * -1;
 			useLA();
 			if (getH(point) > getH(point_i))
 			{
 				point = point_i;
 
 			}
-			else
-			{
-				LA = LA / -1;
+			else {
+				LA = LA / 100;
 				useLA();
 				if (getH(point) > getH(point_i))
 				{
 					point = point_i;
 
+				}
+				else
+				{
+					LA = LA / -1;
+					useLA();
+					if (getH(point) > getH(point_i))
+					{
+						point = point_i;
+
+					}
 				}
 			}
 		}
