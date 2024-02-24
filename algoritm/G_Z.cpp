@@ -1,20 +1,20 @@
-#include "G_Z.h"
+п»ї#include "G_Z.h"
 #include <iostream>
 #include <cmath>
 #include <vector>
-#define N 3 // Размерность системы уравнений
+#define N 3 // ГђГ Г§Г¬ГҐГ°Г­Г®Г±ГІГј Г±ГЁГ±ГІГҐГ¬Г» ГіГ°Г ГўГ­ГҐГ­ГЁГ©
 using namespace std;
 namespace G_Z
 {
 	vector<double> grad(vector<double>(3, 0));
 	vector<vector<double>> points(3, vector<double>(3, 0));
 	vector<double> e(vector<double>(3, 0));
-	vector<double> point(vector<double>(3, 0));//ачальное приблежение
-	vector<double> point_i(vector<double>(3, 0));//ачальное приблежение
-	int k;//номер итерации внутри цикла
-	int j;//номер цикла вычислений
-	int n;//максимальное число итераций
-	const double ac = 0.00001;
+	vector<double> point(vector<double>(3, 0));//Г Г·Г Г«ГјГ­Г®ГҐ ГЇГ°ГЁГЎГ«ГҐГ¦ГҐГ­ГЁГҐ
+	vector<double> point_i(vector<double>(3, 0));//Г Г·Г Г«ГјГ­Г®ГҐ ГЇГ°ГЁГЎГ«ГҐГ¦ГҐГ­ГЁГҐ
+	int k;//Г­Г®Г¬ГҐГ° ГЁГІГҐГ°Г Г¶ГЁГЁ ГўГ­ГіГІГ°ГЁ Г¶ГЁГЄГ«Г 
+	int j;//Г­Г®Г¬ГҐГ° Г¶ГЁГЄГ«Г  ГўГ»Г·ГЁГ±Г«ГҐГ­ГЁГ©
+	int n;//Г¬Г ГЄГ±ГЁГ¬Г Г«ГјГ­Г®ГҐ Г·ГЁГ±Г«Г® ГЁГІГҐГ°Г Г¶ГЁГ©
+	const double ac = 0.0001;
 	double d12;
 	double d13;
 	double d32;
@@ -24,11 +24,11 @@ namespace G_Z
 	void step4();
 	void step5();
 	void find_grad_in_point();
-	double funkx();//диф по х
-	double funky();//диф по y
-	double funkz();//диф по z
+	double funkx();
+	double funky();
+	double funkz();
 	void ras();
-	
+
 	void All(double t1, double t2, double t3, double x1, double x2, double x3, double y1, double y2, double y3, double z1, double z2, double z3) {
 
 		points[0][0] = x1; points[0][1] = y1; points[0][2] = z1;
@@ -37,38 +37,40 @@ namespace G_Z
 		d12 = t1;
 		d13 = t2;
 		d32 = t3;
+		point[0] = 100000;
+		point[1] = 100000;
+		point[2] = 100000;
+		point_i = point;
 
-		n = 1000;//максимальное число итераций
+		n = 1000;
 		j = 0;
-		//шаг 1
-		step1();		//шаг 2
-				//шаг 3
-		//шаг 4
-		//шаг 5
-		//шаг 6
-		//шаг 7
+		step1();		
 	}
 
 
 	void step1()
 	{
-		k = 0;//число итераций в начале;
+		k = 0;
 		step2();
 	}
-	
+
 	void step2()
 	{
 		if (k < n)
 		{
+			if (j < point.size()-1)
+			{
+				j++;
+			}
+			else j = 0;
 			step3();
 		}
 		else
 		{
-			j++;
 			step1();
 		}
 	}
-	
+
 	void step3()
 	{
 		find_grad_in_point();
@@ -79,37 +81,34 @@ namespace G_Z
 	{
 		if (sqrt((pow(grad[0], 2) + pow(grad[1], 2) + pow(grad[2], 2))) < ac)
 		{
-			//конец??
+			cout << "РќСѓ С‚РёРїР°";
+			cout << point[0] << " " << point[1] << " " << point[2] << endl;
+			cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
 		}
 		else
 		{
+			cout << point[0] << " " << point[1] << " " << point[2] << endl;
+			cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
 			step5();
 		}
 	}
 	void step5()
 	{
+		
 		ras();
-		k++;
 		step2();
+		
 	}
 
 	void find_grad_in_point()
 	{
-		
-			grad[0] = funkx();
-			grad[1] = funky();
-			grad[2] = funkz();
-		////для 2 микрофона
-		//grad[1][0] = funkx(points[1]);
-		//grad[1][1] = funky(points[1]);
-		//grad[1][2] = funkz(points[1]);
-		////для 3 микрофона
-		//grad[2][0] = funkx(points[2]);
-		//grad[2][1] = funky(points[2]);
-		//grad[2][2] = funkz(points[2]);
+
+		grad[0] = funkx();
+		grad[1] = funky();
+		grad[2] = funkz();
 
 	}
-	double funkx()//диф по х
+	double funkx()
 	{
 		return ((2 * (point[0] - points[0][0]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
 			- 2 * (point[0] - points[1][0]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
@@ -121,7 +120,7 @@ namespace G_Z
 				- 2 * (point[0] - points[2][0]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))))
 			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
 				- sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- d13) 
+				- d13)
 			+
 			(2 * (point[0] - points[2][0]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2)))
 				- 2 * (point[0] - points[1][0]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
@@ -130,7 +129,7 @@ namespace G_Z
 				- d32));
 	}
 
-	double funky()//диф по х
+	double funky()//Г¤ГЁГґ ГЇГ® Гµ
 	{
 		return ((2 * (point[1] - points[0][1]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
 			- 2 * (point[1] - points[1][1]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
@@ -151,7 +150,7 @@ namespace G_Z
 				- d32));
 	}
 
-	double funkz()//диф по х
+	double funkz()//Г¤ГЁГґ ГЇГ® Гµ
 	{
 		return ((2 * (point[2] - points[0][2]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
 			- 2 * (point[2] - points[1][2]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
@@ -171,14 +170,14 @@ namespace G_Z
 				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
 				- d32));
 	}
-	
+
 	void set_e()
-	{		
-			for (int i = 0; i < point.size(); ++i)
-			{
-				if (i == j) e[i] = 1;
-				else e[i] = 0;
-			}
+	{
+		for (int i = 0; i < point.size(); ++i)
+		{
+			if (i == j) e[i] = 1;
+			else e[i] = 0;
+		}
 	}
 	double getH(vector<double> p)
 	{
@@ -186,11 +185,11 @@ namespace G_Z
 			sqrt(pow(p[0] - points[1][0], 2) + pow(p[1] - points[1][1], 2) + pow(p[2] - points[1][2], 2)) +
 			sqrt(pow(p[0] - points[2][0], 2) + pow(p[1] - points[2][1], 2) + pow(p[2] - points[2][2], 2)) - d12 - d32 - d13);
 	}
-	double LA = 10;
+	double LA = 1000000;
 	void useLA()
 	{
 		point_i = point;
-		point_i[j] = point[k] - LA * grad[j];
+		point_i[j] = point[j] - LA * grad[j];
 	}
 	void ras()
 	{
@@ -201,29 +200,28 @@ namespace G_Z
 		}
 		else
 		{
-			LA = LA / 1.05;
+			LA = LA / 2;
 			useLA();
 			if (getH(point) > getH(point_i))
 			{
 				point = point_i;
+
 			}
 			else
 			{
-				LA = LA /- 1.05;
+				LA = LA / -1;
 				useLA();
 				if (getH(point) > getH(point_i))
 				{
 					point = point_i;
+
 				}
 			}
 		}
 	}
 
-
-
-
 //{
-//    // Функция для нахождения значения переменной xi
+//    // Р¤СѓРЅРєС†РёСЏ РґР»СЏ РЅР°С…РѕР¶РґРµРЅРёСЏ Р·РЅР°С‡РµРЅРёСЏ РїРµСЂРµРјРµРЅРЅРѕР№ xi
 //    double calculateXi(double A[N][N], double x[N], double b[N], int i) {
 //        double sum = 0.0;
 //        for (int j = 0; j < N; ++j) {
@@ -234,9 +232,9 @@ namespace G_Z
 //        return (b[i] - sum) / A[i][i];
 //    }
 //
-//    // Метод покоординатного спуска Гаусса — Зейделя
+//    // РњРµС‚РѕРґ РїРѕРєРѕРѕСЂРґРёРЅР°С‚РЅРѕРіРѕ СЃРїСѓСЃРєР° Р“Р°СѓСЃСЃР° вЂ” Р—РµР№РґРµР»СЏ
 //    void gaussSeidel(double A[N][N], double x[N], double b[N], int maxIterations, double tolerance) {
-//        double xNew[N]; // Массив для хранения новых значений переменных
+//        double xNew[N]; // РњР°СЃСЃРёРІ РґР»СЏ С…СЂР°РЅРµРЅРёСЏ РЅРѕРІС‹С… Р·РЅР°С‡РµРЅРёР№ РїРµСЂРµРјРµРЅРЅС‹С…
 //        int iteration = 0;
 //        double error = tolerance + 1;
 //
@@ -251,23 +249,23 @@ namespace G_Z
 //        }
 //
 //        if (error <= tolerance) {
-//            std::cout << "Метод сошелся к решению:" << std::endl;
+//            std::cout << "РњРµС‚РѕРґ СЃРѕС€РµР»СЃСЏ Рє СЂРµС€РµРЅРёСЋ:" << std::endl;
 //            for (int i = 0; i < N; ++i) {
 //                std::cout << "x[" << i << "] = " << x[i] << std::endl;
 //            }
 //        }
 //        else {
-//            std::cout << "Метод не сошелся к решению после " << maxIterations << " итераций." << std::endl;
+//            std::cout << "РњРµС‚РѕРґ РЅРµ СЃРѕС€РµР»СЃСЏ Рє СЂРµС€РµРЅРёСЋ РїРѕСЃР»Рµ " << maxIterations << " РёС‚РµСЂР°С†РёР№." << std::endl;
 //        }
 //    }
 //
 //    void All(double t1, double t2, double t3, double x1, double x2, double x3, double y1, double y2, double y3, double z1, double z2, double z3)
 //    {
-//        double A[N][N] = { {x1, y1, z1}, {x2, y2, z2}, {x3, y3, z3} }; // Матрица коэффициентов
-//        double b[N] = { t1, t2, t3 }; // Вектор правой части
-//        double x[N] = { 0 }; // Начальное приближение решения
-//        int maxIterations = 1000; // Максимальное количество итераций
-//        double tolerance = 1e-4; // Погрешность
+//        double A[N][N] = { {x1, y1, z1}, {x2, y2, z2}, {x3, y3, z3} }; // РњР°С‚СЂРёС†Р° РєРѕСЌС„С„РёС†РёРµРЅС‚РѕРІ
+//        double b[N] = { t1, t2, t3 }; // Р’РµРєС‚РѕСЂ РїСЂР°РІРѕР№ С‡Р°СЃС‚Рё
+//        double x[N] = { 0 }; // РќР°С‡Р°Р»СЊРЅРѕРµ РїСЂРёР±Р»РёР¶РµРЅРёРµ СЂРµС€РµРЅРёСЏ
+//        int maxIterations = 1000; // РњР°РєСЃРёРјР°Р»СЊРЅРѕРµ РєРѕР»РёС‡РµСЃС‚РІРѕ РёС‚РµСЂР°С†РёР№
+//        double tolerance = 1e-4; // РџРѕРіСЂРµС€РЅРѕСЃС‚СЊ
 //
 //        gaussSeidel(A, x, b, maxIterations, tolerance);
 //
