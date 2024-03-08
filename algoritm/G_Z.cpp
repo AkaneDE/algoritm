@@ -28,6 +28,8 @@ namespace G_Z
 	double funky();
 	double funkz();
 	void ras();
+	void WhyNot();
+
 
 	void All(double t1, double t2, double t3, double x1, double x2, double x3, double y1, double y2, double y3, double z1, double z2, double z3) {
 
@@ -42,9 +44,46 @@ namespace G_Z
 		point[2] = 100000;
 		point_i = point;
 
-		n = 10;
+		n = 1;
 		j = 0;
-		step1();		
+		k = 0;
+		WhyNot();
+		//step1();		
+	}
+	double LA = 10000000;
+
+	void WhyNot()
+	{
+		do
+		{
+			cout << point[0] << " " << point[1] << " " << point[2] << endl;
+			cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
+			cout << LA << endl;
+			/*if (k < n)
+			{
+				find_grad_in_point();
+			}
+			else
+			{*/
+				if (j < point.size() - 1)
+				{
+					j++;
+				}
+				else j = 0;
+				//LA = 10000000;
+				k = 0;
+				find_grad_in_point();
+
+			
+			ras();
+			k++;
+		} while (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)) +
+			sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2)) +
+			sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
+			- d12 - d13 - d32 > ac);
+
+		cout << "Ну типа";
+
 	}
 
 
@@ -53,7 +92,6 @@ namespace G_Z
 		k = 0;
 		step2();
 	}
-	double LA = 10000000;
 
 	void step2()
 	{
@@ -233,6 +271,21 @@ namespace G_Z
 					{
 						point = point_i;
 
+					}
+					else
+					{
+						LA *= 1000;
+						useLA();
+						if (getH(point) > getH(point_i))
+						{
+							point = point_i;
+
+						}
+						else
+						{
+							LA /= 1000;
+
+						}
 					}
 				}
 			}
