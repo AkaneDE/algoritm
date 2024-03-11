@@ -28,7 +28,7 @@ private:
 
 	
 	size_t n = 3;//порядок фильтрации
-	const float del_t = 1 / 20000;//40000 отсчётов в секунду. Частота 40кгц
+	const float del_t = 1 ;//40000 отсчётов в секунду. Частота 40кгц
 	
 	void get_Del()//нахождение разницы отсчётов
 	{
@@ -91,7 +91,11 @@ private:
 		}
 		return v;
 	}
-public:
+public
+	
+	
+	
+	:
 
 	all(vector<float> v1, vector<float> v2, vector<float> v3, double x1, double y1, double z1, double x2, double y2, double z2, double x3, double y3, double z3)
 	{

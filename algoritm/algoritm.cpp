@@ -27,11 +27,11 @@ void create_vector() {
 
     }
     
-    for (int i = 0; i < 2; ++i) {
+    for (int i = 0; i < 5; ++i) {
         v2.erase(v2.begin());
     }
     vectorLength = rand() % 500 + 10;
-    for (int i = 0; i < 7; ++i) {
+    for (int i = 0; i < 5; ++i) {
         v3.insert(v3.begin(), 1000-i);
         
     }
@@ -43,7 +43,7 @@ void create_vector() {
 int main()
 {
     create_vector();
-    all a = all(v1, v2, v3, 0, 0, 0, -14, 0, 0, 15, 0, 0);
+    all a = all(v1, v2, v3, 0, 0, 0, -5, 0, 0, 5, 0, 0);
     a.TDoA();
 
 

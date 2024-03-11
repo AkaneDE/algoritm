@@ -6,19 +6,32 @@
 using namespace std;
 namespace G_Z
 {
+	struct Point
+	{
+	public:
+		Point(double x1, double y1, double z1)  // конструктор объекта
+		{
+			x = x1; y = y1; z = z1;
+		}
+		double x;
+		double y;
+		double z;
+	};
+	double sko, sko_last;
+	double SKO();
 	vector<double> grad(vector<double>(3, 0));
-	vector<vector<double>> points(3, vector<double>(3, 0));
-	vector<double> e(vector<double>(3, 0));
-	vector<double> point(vector<double>(3, 0));//à÷àëüíîå ïðèáëåæåíèå
-	vector<double> point_i(vector<double>(3, 0));//à÷àëüíîå ïðèáëåæåíèå
+	vector<Point> points;
+	Point point(0, 0, 0);//à÷àëüíîå ïðèáëåæåíèå
+	Point point_i(0, 0, 0);//à÷àëüíîå ïðèáëåæåíèå
 	int k;//íîìåð èòåðàöèè âíóòðè öèêëà
 	int j;//íîìåð öèêëà âû÷èñëåíèé
 	int n;//ìàêñèìàëüíîå ÷èñëî èòåðàöèé
-	const double ac = 0.1;
+	const double ac = 0.000000001;
 	double d12;
 	double d13;
 	double d32;
-	void step1();
+	double getH(Point p);
+	/*void step1();
 	void step2();
 	void step3();
 	void step4();
@@ -26,223 +39,99 @@ namespace G_Z
 	void find_grad_in_point();
 	double funkx();
 	double funky();
-	double funkz();
+	double funkz();*/
 	void ras();
 	void WhyNot();
 
 
 	void All(double t1, double t2, double t3, double x1, double x2, double x3, double y1, double y2, double y3, double z1, double z2, double z3) {
 
-		points[0][0] = x1; points[0][1] = y1; points[0][2] = z1;
-		points[1][0] = x2; points[1][1] = y2; points[1][2] = z2;
-		points[2][0] = x3; points[2][1] = y3; points[2][2] = z3;
+		points.push_back(Point(x1, y1, z1));
+		points.push_back(Point(x2, y2, z2));
+		points.push_back(Point(x3, y3, z3));
+
 		d12 = t1;
 		d13 = t2;
 		d32 = t3;
-		point[0] = 100000;
-		point[1] = 100000;
-		point[2] = 100000;
+		point.x = 1000;
+		point.y = 1000;
+		point.z = 1000;
 		point_i = point;
-
+		sko = SKO();
+		sko_last = sko;
 		n = 1;
 		j = 0;
 		k = 0;
 		WhyNot();
 		//step1();		
 	}
-	double LA = 10000000;
+	double LA = 4;
 
 	void WhyNot()
 	{
 		do
 		{
-			cout << point[0] << " " << point[1] << " " << point[2] << endl;
-			cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
-			cout << LA << endl;
-			/*if (k < n)
-			{
-				find_grad_in_point();
-			}
-			else
-			{*/
-				if (j < point.size() - 1)
-				{
-					j++;
-				}
-				else j = 0;
-				//LA = 10000000;
-				k = 0;
-				find_grad_in_point();
-
 			
-			ras();
-			k++;
-		} while (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)) +
-			sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2)) +
-			sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-			- d12 - d13 - d32 > ac);
-
-		cout << "Ну типа";
-
-	}
-
-
-	void step1()
-	{
-		k = 0;
-		step2();
-	}
-
-	void step2()
-	{
-		if (k < n)
-		{
-			step3();
-
-		}
-		else
-		{
-			if (j < point.size() - 1)
+			
+			if (j < 3 - 1)
 			{
 				j++;
 			}
 			else j = 0;
-			LA = 1000000;
-			step1();
-		}
-	}
+			
 
-	void step3()
-	{
-		find_grad_in_point();
-		step4();
-	}
-
-	void step4()
-	{
-		    if (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))+
-			sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))+
-			sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-			- d12 - d13-d32 < ac)
-			//if (sqrt((pow(grad[0], 2) + pow(grad[1], 2) + pow(grad[2], 2))) < ac)
-			{
-				cout << "Ну типа";
-				cout << point[0] << " " << point[1] << " " << point[2] << endl;
-				cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
-			}
-			else
-			{
-				cout << point[0] << " " << point[1] << " " << point[2] << endl;
-				cout << grad[0] << " " << grad[1] << " " << grad[2] << endl;
-				cout << LA << endl;
-
-				step5();
-			}
-	}
-	void step5()
-	{
-		
-		ras();
-		k++;
-		step2();
-
-		
-	}
-
-	void find_grad_in_point()
-	{
-
-		grad[0] = funkx();
-		grad[1] = funky();
-		grad[2] = funkz();
+			ras();//основной расчёт
+			//вывод промежуточных значений
+			cout << point.x << " " << point.y << " " << point.z << endl;
+			cout << LA << endl;
+			cout << getH(point) << endl;
+		} while (getH(point) > ac);//Пока мы не найдём нужную точку
+		cout << point.x << " " << point.y << " " << point.z << endl;
+		cout << getH(point) << endl;
+		cout << "Ну типа";
 
 	}
-	double funkx()
-	{
-		return ((2 * (point[0] - points[0][0]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
-			- 2 * (point[0] - points[1][0]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
-			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
-				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
-				- d12)
-			+
-			(2 * (point[0] - points[0][0]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
-				- 2 * (point[0] - points[2][0]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))))
-			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
-				- sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- d13)
-			+
-			(2 * (point[0] - points[2][0]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2)))
-				- 2 * (point[0] - points[1][0]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
-			* (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
-				- d32));
-	}
 
-	double funky()//äèô ïî õ
+	double getH(Point p)
 	{
-		return ((2 * (point[1] - points[0][1]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
-			- 2 * (point[1] - points[1][1]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
-			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
-				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
-				- d12)
-			+
-			(2 * (point[1] - points[0][1]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
-				- 2 * (point[1] - points[2][1]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))))
-			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
-				- sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- d13)
-			+
-			(2 * (point[1] - points[2][1]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2)))
-				- 2 * (point[1] - points[1][1]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
-			* (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
-				- d32));
+		return abs(sqrt(pow(p.x - points[0].x, 2) + pow(p.y - points[0].y, 2) + pow(p.z - points[0].z, 2)) - sqrt(pow(p.x - points[1].x, 2) + pow(p.y - points[1].y, 2) + pow(p.z - points[1].z, 2)) - d12
+			+ sqrt(pow(p.x - points[0].x, 2) + pow(p.y - points[0].y, 2) + pow(p.z - points[0].z, 2)) - sqrt(pow(p.x - points[2].x, 2) + pow(p.y - points[2].y, 2) + pow(p.z - points[2].z, 2)) - d13
+			+ sqrt(pow(p.x - points[2].x, 2) + pow(p.y - points[2].y, 2) + pow(p.z - points[2].z, 2)) - sqrt(pow(p.x - points[1].x, 2) + pow(p.y - points[1].y, 2) + pow(p.z - points[1].z, 2)) - d32);
 	}
-
-	double funkz()//äèô ïî õ
+	
+	double Fd12()
 	{
-		return ((2 * (point[2] - points[0][2]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
-			- 2 * (point[2] - points[1][2]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
-			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
-				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
-				- d12)
-			+
-			(2 * (point[2] - points[0][2]) / (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2)))
-				- 2 * (point[2] - points[2][2]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))))
-			* (sqrt(pow(point[0] - points[0][0], 2) + pow(point[1] - points[0][1], 2) + pow(point[2] - points[0][2], 2))
-				- sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- d13)
-			+
-			(2 * (point[2] - points[2][2]) / (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2)))
-				- 2 * (point[2] - points[1][2]) / (sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))))
-			* (sqrt(pow(point[0] - points[2][0], 2) + pow(point[1] - points[2][1], 2) + pow(point[2] - points[2][2], 2))
-				- sqrt(pow(point[0] - points[1][0], 2) + pow(point[1] - points[1][1], 2) + pow(point[2] - points[1][2], 2))
-				- d32));
+		d12 - pow(sqrt(pow(point.x - points[0].x, 2) + pow(point.y - points[0].y, 2) + pow(point.z - points[0].z, 2)) - sqrt(pow(point.x - points[1].x, 2) + pow(point.y - points[1].y, 2) + pow(point.z - points[1].z, 2)), 2);
 	}
-
-	void set_e()
+	double Fd13()
 	{
-		for (int i = 0; i < point.size(); ++i)
-		{
-			if (i == j) e[i] = 1;
-			else e[i] = 0;
-		}
+		d13 - pow(sqrt(pow(point.x - points[0].x, 2) + pow(point.y - points[0].y, 2) + pow(point.z - points[0].z, 2)) - sqrt(pow(point.x - points[2].x, 2) + pow(point.y - points[2].y, 2) + pow(point.z - points[2].z, 2)), 2);
 	}
-	double getH(vector<double> p)
+	double Fd32()
 	{
-		return (sqrt(pow(p[0] - points[0][0], 2) + pow(p[1] - points[0][1], 2) + pow(p[2] - points[0][2], 2)) +
-			sqrt(pow(p[0] - points[1][0], 2) + pow(p[1] - points[1][1], 2) + pow(p[2] - points[1][2], 2)) +
-			sqrt(pow(p[0] - points[2][0], 2) + pow(p[1] - points[2][1], 2) + pow(p[2] - points[2][2], 2)) - d12 - d32 - d13);
+		d32 - pow(sqrt(pow(point.x - points[2].x, 2) + pow(point.y - points[2].y, 2) + pow(point.z - points[2].z,2)) - sqrt(pow(point.x - points[1].x, 2) + pow(point.y - points[1].y, 2) + pow(point.z - points[1].z, 2)), 2);
+	}
+	double SKO()
+	{
+		return Fd12() + Fd13() + Fd32();
 	}
 	void useLA()
 	{
 		point_i = point;
-		point_i[j] = point[j] - LA * grad[j];
+		if (j == 0)
+			point_i.x = point.x - LA;
+		else if (j == 1)
+			point_i.y = point.y - LA;
+		else
+			point_i.z = point.z - LA;
+
+
 	}
 	void ras()
 	{
-		useLA();
-		if (getH(point) > getH(point_i))
+		useLA();//Расчёт координаты с заданным коэф шага
+		sko = SKO();
+		if (getH(point) > getH(point_i))//Перебор коэффициента и поск поддходящего
 		{
 			point = point_i;
 		}
@@ -256,7 +145,7 @@ namespace G_Z
 
 			}
 			else {
-				LA = LA / 10;
+				LA = LA / 2;
 				useLA();
 				if (getH(point) > getH(point_i))
 				{
@@ -274,7 +163,7 @@ namespace G_Z
 					}
 					else
 					{
-						LA *= 1000;
+						LA *= 2;
 						useLA();
 						if (getH(point) > getH(point_i))
 						{
@@ -283,7 +172,7 @@ namespace G_Z
 						}
 						else
 						{
-							LA /= 1000;
+							LA /= 2;
 
 						}
 					}
@@ -292,54 +181,5 @@ namespace G_Z
 		}
 	}
 
-//{
-//    // Функция для нахождения значения переменной xi
-//    double calculateXi(double A[N][N], double x[N], double b[N], int i) {
-//        double sum = 0.0;
-//        for (int j = 0; j < N; ++j) {
-//            if (j != i) {
-//                sum += A[i][j] * x[j];
-//            }
-//        }
-//        return (b[i] - sum) / A[i][i];
-//    }
-//
-//    // Метод покоординатного спуска Гаусса — Зейделя
-//    void gaussSeidel(double A[N][N], double x[N], double b[N], int maxIterations, double tolerance) {
-//        double xNew[N]; // Массив для хранения новых значений переменных
-//        int iteration = 0;
-//        double error = tolerance + 1;
-//
-//        while (iteration < maxIterations && error > tolerance) {
-//            error = 0.0;
-//            for (int i = 0; i < N; ++i) {
-//                double xiNew = calculateXi(A, xNew, b, i);
-//                error = std::max(error, std::abs(xiNew - x[i]));
-//                x[i] = xiNew;
-//            }
-//            ++iteration;
-//        }
-//
-//        if (error <= tolerance) {
-//            std::cout << "Метод сошелся к решению:" << std::endl;
-//            for (int i = 0; i < N; ++i) {
-//                std::cout << "x[" << i << "] = " << x[i] << std::endl;
-//            }
-//        }
-//        else {
-//            std::cout << "Метод не сошелся к решению после " << maxIterations << " итераций." << std::endl;
-//        }
-//    }
-//
-//    void All(double t1, double t2, double t3, double x1, double x2, double x3, double y1, double y2, double y3, double z1, double z2, double z3)
-//    {
-//        double A[N][N] = { {x1, y1, z1}, {x2, y2, z2}, {x3, y3, z3} }; // Матрица коэффициентов
-//        double b[N] = { t1, t2, t3 }; // Вектор правой части
-//        double x[N] = { 0 }; // Начальное приближение решения
-//        int maxIterations = 1000; // Максимальное количество итераций
-//        double tolerance = 1e-4; // Погрешность
-//
-//        gaussSeidel(A, x, b, maxIterations, tolerance);
-//
-//    }
-};
+}
+
